@@ -142,8 +142,8 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    UIImage *image = info[UIImagePickerControllerOriginalImage];
+//    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)focusAtPoint:(UITapGestureRecognizer *)point {
@@ -342,40 +342,27 @@
     [self takePicture];
 }
 
-- (void)volumeChanged:(NSNotification*)notification {
-    if([[notification.userInfo objectForKey:@"AVSystemController_AudioVolumeChangeReasonNotificationParameter"] isEqualToString:@"ExplicitVolumeChange"]) {
-        float volume = [[[notification userInfo]
-                         objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"]
-                        floatValue];
-    }
-}
-
-- (void)takePicture
-{
+- (void)takePicture {
     if (!self.cameraButton.enabled) return;
-    
     AVCaptureStillImageOutput *output = self.session.outputs.lastObject;
     AVCaptureConnection *videoConnection = output.connections.lastObject;
     if (!videoConnection) return;
-    
+    if (indexCapture == 1) {
+        self.fAngleDevice = [self.zAngleLable.text floatValue];
+    } else {
+        self.sAngleDevice = [self.zAngleLable.text floatValue];
+    }
     [output captureStillImageAsynchronouslyFromConnection:videoConnection
                                         completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
                                             self.cameraButton.enabled = YES;
                                             
                                             if (!imageDataSampleBuffer || error) return;
-                                            if (indexCapture == 1) {
-                                                self.fAngleDevice = [self.zAngleLable.text floatValue];
-                                            } else {
-                                                self.sAngleDevice = [self.zAngleLable.text floatValue];
-                                            }
-                                            
                                             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
                                             
                                             UIImage *image = [UIImage imageWithCGImage:[[[UIImage alloc] initWithData:imageData] CGImage] scale:1.0f orientation:[self currentImageOrientation]];
                                             
                                             [self handleImage:image];
                                         }];
-    
     self.cameraButton.enabled = NO;
 }
 
