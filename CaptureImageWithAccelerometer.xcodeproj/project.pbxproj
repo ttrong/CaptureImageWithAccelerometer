@@ -49,6 +49,7 @@
 		225340B320B7E8AA00E23298 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 225340B220B7E8AA00E23298 /* main.m */; };
 		225340BD20B7E8AA00E23298 /* CaptureImageWithAccelerometerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 225340BC20B7E8AA00E23298 /* CaptureImageWithAccelerometerTests.m */; };
 		225340C820B7E8AA00E23298 /* CaptureImageWithAccelerometerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 225340C720B7E8AA00E23298 /* CaptureImageWithAccelerometerUITests.m */; };
+		229DA68020C902E300165294 /* RBVolumeButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 229DA67F20C902E200165294 /* RBVolumeButtons.m */; };
 		22DD112220C7C4C600405F70 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DD112120C7C4C600405F70 /* MBProgressHUD.m */; };
 /* End PBXBuildFile section */
 
@@ -142,6 +143,8 @@
 		225340C320B7E8AA00E23298 /* CaptureImageWithAccelerometerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CaptureImageWithAccelerometerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		225340C720B7E8AA00E23298 /* CaptureImageWithAccelerometerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CaptureImageWithAccelerometerUITests.m; sourceTree = "<group>"; };
 		225340C920B7E8AA00E23298 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		229DA67E20C902E200165294 /* RBVolumeButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RBVolumeButtons.h; sourceTree = "<group>"; };
+		229DA67F20C902E200165294 /* RBVolumeButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RBVolumeButtons.m; sourceTree = "<group>"; };
 		22DD112020C7C4C600405F70 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		22DD112120C7C4C600405F70 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -174,6 +177,7 @@
 		2207657A20C52A5D00BD79E1 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				229DA67D20C902E200165294 /* RBVolumeButtons */,
 				22DD111F20C7C4C600405F70 /* MBProgressHUD */,
 				221D65DB20C66D5B008727C8 /* AFNetworking */,
 				221D65C620C66D5B008727C8 /* UIKit+AFNetworking */,
@@ -328,6 +332,15 @@
 				225340C920B7E8AA00E23298 /* Info.plist */,
 			);
 			path = CaptureImageWithAccelerometerUITests;
+			sourceTree = "<group>";
+		};
+		229DA67D20C902E200165294 /* RBVolumeButtons */ = {
+			isa = PBXGroup;
+			children = (
+				229DA67E20C902E200165294 /* RBVolumeButtons.h */,
+				229DA67F20C902E200165294 /* RBVolumeButtons.m */,
+			);
+			path = RBVolumeButtons;
 			sourceTree = "<group>";
 		};
 		22DD111F20C7C4C600405F70 /* MBProgressHUD */ = {
@@ -499,6 +512,7 @@
 				221D65F020C66D5C008727C8 /* UIImageView+AFNetworking.m in Sources */,
 				221D65F620C66D5C008727C8 /* AFNetworkReachabilityManager.m in Sources */,
 				221D65F220C66D5C008727C8 /* UIRefreshControl+AFNetworking.m in Sources */,
+				229DA68020C902E300165294 /* RBVolumeButtons.m in Sources */,
 				221D65EE20C66D5C008727C8 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				221D65FA20C66D5C008727C8 /* AFURLSessionManager.m in Sources */,
 				221D65C520C65EB8008727C8 /* PreviewViewController.m in Sources */,

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreMotion/CMMotionManager.h>
+#import "RBVolumeButtons.h"
 
 @interface ViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
     float device_angle;
@@ -15,6 +16,7 @@
     int indexCapture;
 }
 
+@property (nonatomic, strong) RBVolumeButtons *buttonStealer;
 @property (nonatomic, strong)CMMotionManager *motionManager;
 
 @end

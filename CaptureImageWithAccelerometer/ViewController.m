@@ -77,7 +77,7 @@
             CMAttitude *attitude = motion.attitude;
             
             // Get the pitch (in radians) and convert to degrees.
-            NSLog(@"%f", attitude.pitch * 180.0/M_PI);
+//            NSLog(@"%f", attitude.pitch * 180.0/M_PI);
             dispatch_async(dispatch_get_main_queue(), ^{
                 // Update some UI
                 float angleCenvert = attitude.pitch * 180.0/M_PI;
@@ -86,8 +86,15 @@
             });
         }];
     }
+    
+    self.buttonStealer = [[RBVolumeButtons alloc] init];
+    self.buttonStealer.upBlock = ^{
+        [weakSelf takePicture];
+    };
+    self.buttonStealer.downBlock = ^{
+        [weakSelf takePicture];
+    };
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -96,6 +103,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.buttonStealer startStealingVolumeButtonEvents];
     [self enableCapture];
 //    if (_motionManager) {
 //        [_motionManager startDeviceMotionUpdates];
@@ -104,7 +112,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
+    [self.buttonStealer stopStealingVolumeButtonEvents];
 //    if (_motionManager) {
 //        [_motionManager stopDeviceMotionUpdates];
 //    }
@@ -138,6 +146,31 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)focusAtPoint:(UITapGestureRecognizer *)point {
+    if (point.state == UIGestureRecognizerStateRecognized) {
+        CGPoint location = [point locationInView:_contenCameraShow];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            AVCaptureDevice *device = [self currentDevice];
+            if ([device isFocusPointOfInterestSupported] && [device isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
+                NSError *error;
+                if ([device lockForConfiguration:&error]) {
+                    [device setFocusPointOfInterest:location];
+                    [device setFocusMode:AVCaptureFocusModeAutoFocus];
+                    [device unlockForConfiguration];
+                } else {
+                    //            id delegate = [self delegate];
+                    //
+                    //            if ([delegate respondsToSelector:@selector(acquiringDeviceLockFailedWithError:)]) {
+                    //
+                    //                [delegate acquiringDeviceLockFailedWithError:error];
+                    //
+                    //            }
+                }
+            }
+        });
+    }
+}
+
 - (void)enableCapture
 {
     if (self.session) return;
@@ -154,8 +187,7 @@
 }
 
 
-- (NSBlockOperation *)captureOperation
-{
+- (NSBlockOperation *)captureOperation {
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
         self.session = [[AVCaptureSession alloc] init];
         self.session.sessionPreset = AVCaptureSessionPresetPhoto;
@@ -196,7 +228,6 @@
     return operation;
 }
 
-
 - (void)operationCompleted
 {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -217,6 +248,9 @@
             [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear]) {
             self.cameraButton.hidden = NO;
         }
+        
+        UITapGestureRecognizer* tapScanner = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAtPoint:)];
+        [self.contenCameraShow addGestureRecognizer:tapScanner];
     });
 }
 
@@ -304,6 +338,17 @@
     return imageOrientation;
 }
 
+- (void)volumeChanged {
+    [self takePicture];
+}
+
+- (void)volumeChanged:(NSNotification*)notification {
+    if([[notification.userInfo objectForKey:@"AVSystemController_AudioVolumeChangeReasonNotificationParameter"] isEqualToString:@"ExplicitVolumeChange"]) {
+        float volume = [[[notification userInfo]
+                         objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"]
+                        floatValue];
+    }
+}
 
 - (void)takePicture
 {
