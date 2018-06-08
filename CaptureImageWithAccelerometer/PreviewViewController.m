@@ -8,6 +8,7 @@
 
 #import "PreviewViewController.h"
 #import "AFAppDotNetAPIClient.h"
+#import <sys/utsname.h>
 
 @interface PreviewViewController ()
 
@@ -53,7 +54,12 @@
 #pragma mark - API function
 
 - (void)saveImageToServer {
-    NSString *DeviceInfo = [[UIDevice currentDevice] name];
+//    NSString *DeviceInfo = [[UIDevice currentDevice] localizedModel];
+    struct utsname systemInfo;
+    uname(&systemInfo);
+//    NSString *iOSDeviceModelsPath = [[NSBundle mainBundle] pathForResource:@"iOSDeviceModelMapping" ofType:@"plist"];
+//    NSDictionary *iOSDevices = [NSDictionary dictionaryWithContentsOfFile:iOSDeviceModelsPath];
+    NSString* deviceModel = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
     NSString *version = [[UIDevice currentDevice] systemVersion];
     
     NSData *fimageData = UIImageJPEGRepresentation(self.imageCapture, 1.0);
@@ -65,13 +71,15 @@
 //    NSData *deviceData = [DeviceInfo dataUsingEncoding:NSUTF8StringEncoding];
 //    NSData *versionData = [version dataUsingEncoding:NSUTF8StringEncoding];
     
-    NSMutableDictionary *parame = [[NSMutableDictionary alloc] init];
-    [parame setObject:[NSNumber numberWithFloat:_angleDevice] forKey:@"fileAngle"];
-    [parame setObject:[NSNumber numberWithFloat:_sAngleDevice] forKey:@"sfileAngle"];
-    [parame setObject:DeviceInfo forKey:@"deviceName"];
-    [parame setObject:version forKey:@"osVersion"];
-    
-    [[AFAppDotNetAPIClient sharedClient] POST:@"api?action=new" parameters:parame constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+//    NSMutableDictionary *parame = [[NSMutableDictionary alloc] init];
+//    [parame setObject:@"new" forKey:@"action"];
+//    [parame setObject:[NSNumber numberWithFloat:_angleDevice] forKey:@"fileAngle"];
+//    [parame setObject:[NSNumber numberWithFloat:_sAngleDevice] forKey:@"sfileAngle"];
+//    [parame setObject:DeviceInfo forKey:@"deviceName"];
+//    [parame setObject:version forKey:@"osVersion"];
+//    @"api?action=new"
+    NSString *partLink = [NSString stringWithFormat:@"api?action=new&fileAngle=%.2f&sfileAngle=%.2f&deviceName=%@&osVersion=%@",_angleDevice, _sAngleDevice, deviceModel, version];
+    [[AFAppDotNetAPIClient sharedClient] POST:partLink parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         [formData appendPartWithFileData:fimageData name:@"fimage" fileName:@"fimage.jpg" mimeType:@"image/jpeg"];
         [formData appendPartWithFileData:simageData name:@"simage" fileName:@"simage.jpg" mimeType:@"image/jpeg"];
 //        [formData appendPartWithFormData:fileAngleData name:@"fileAngle"];
