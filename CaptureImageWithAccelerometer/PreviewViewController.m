@@ -58,26 +58,26 @@
     
     NSData *fimageData = UIImageJPEGRepresentation(self.imageCapture, 1.0);
     NSData *simageData = UIImageJPEGRepresentation(self.sImageCapture, 1.0);
-    NSMutableData *fileAngleData = [NSMutableData dataWithCapacity:0];
-    [fileAngleData appendBytes:&_angleDevice length:sizeof(float)];
-    NSMutableData *sfileAngleData = [NSMutableData dataWithCapacity:0];
-    [sfileAngleData appendBytes:&_sAngleDevice length:sizeof(float)];
-    NSData *deviceData = [DeviceInfo dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *versionData = [version dataUsingEncoding:NSUTF8StringEncoding];
+//    NSMutableData *fileAngleData = [NSMutableData dataWithCapacity:0];
+//    [fileAngleData appendBytes:&_angleDevice length:sizeof(float)];
+//    NSMutableData *sfileAngleData = [NSMutableData dataWithCapacity:0];
+//    [sfileAngleData appendBytes:&_sAngleDevice length:sizeof(float)];
+//    NSData *deviceData = [DeviceInfo dataUsingEncoding:NSUTF8StringEncoding];
+//    NSData *versionData = [version dataUsingEncoding:NSUTF8StringEncoding];
     
-//    NSMutableDictionary *parame = [[NSMutableDictionary alloc] init];
-//    [parame setObject:[NSNumber numberWithFloat:_angleDevice] forKey:@"fileAngle"];
-//    [parame setObject:[NSNumber numberWithFloat:_sAngleDevice] forKey:@"sfileAngle"];
-//    [parame setObject:DeviceInfo forKey:@"deviceName"];
-//    [parame setObject:version forKey:@"osVersion"];
+    NSMutableDictionary *parame = [[NSMutableDictionary alloc] init];
+    [parame setObject:[NSNumber numberWithFloat:_angleDevice] forKey:@"fileAngle"];
+    [parame setObject:[NSNumber numberWithFloat:_sAngleDevice] forKey:@"sfileAngle"];
+    [parame setObject:DeviceInfo forKey:@"deviceName"];
+    [parame setObject:version forKey:@"osVersion"];
     
-    [[AFAppDotNetAPIClient sharedClient] POST:@"upload" parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    [[AFAppDotNetAPIClient sharedClient] POST:@"api?action=new" parameters:parame constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         [formData appendPartWithFileData:fimageData name:@"fimage" fileName:@"fimage.jpg" mimeType:@"image/jpeg"];
         [formData appendPartWithFileData:simageData name:@"simage" fileName:@"simage.jpg" mimeType:@"image/jpeg"];
-        [formData appendPartWithFormData:fileAngleData name:@"fileAngle"];
-        [formData appendPartWithFormData:sfileAngleData name:@"sfileAngle"];
-        [formData appendPartWithFormData:deviceData name:@"deviceName"];
-        [formData appendPartWithFormData:versionData name:@"osVersion"];
+//        [formData appendPartWithFormData:fileAngleData name:@"fileAngle"];
+//        [formData appendPartWithFormData:sfileAngleData name:@"sfileAngle"];
+//        [formData appendPartWithFormData:deviceData name:@"deviceName"];
+//        [formData appendPartWithFormData:versionData name:@"osVersion"];
     } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         int success = [[responseObject objectForKey:@"errorCode"] boolValue];
         if (success == 1) {
@@ -94,7 +94,6 @@
             [alertView addAction:closeButton];
             [self presentViewController:alertView animated:YES completion:nil];
         }
-        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"error message %s = %@", __PRETTY_FUNCTION__, error.localizedDescription);
         [self.loadingView hide:YES];

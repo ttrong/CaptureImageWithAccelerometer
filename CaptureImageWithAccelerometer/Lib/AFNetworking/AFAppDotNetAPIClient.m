@@ -32,7 +32,7 @@ static NSString * const AFAppDotNetAPIBaseURLString = @"http://www.inochi.io";
     dispatch_once(&onceToken, ^{
         _sharedClient = [[AFAppDotNetAPIClient alloc] initWithBaseURL:[NSURL URLWithString:AFAppDotNetAPIBaseURLString]];
         _sharedClient.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
-//        _sharedClient.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/html"];
+//        _sharedClient.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/json"];
     });
     
     return _sharedClient;
