@@ -376,11 +376,11 @@
                                             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
                                             
                                             UIImage *image = [[UIImage alloc]initWithData:imageData scale:1];
-                                            AVCaptureDeviceInput *input = self.session.inputs.firstObject;
-                                            if (input.device.position == AVCaptureDevicePositionFront) {
-                                                image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationLeftMirrored];
-                                            }
-//                                            UIImage * image = [[UIImage alloc]initWithData:imageData scale:1];
+//                                            AVCaptureDeviceInput *input = self.session.inputs.firstObject;
+//                                            if (input.device.position == AVCaptureDevicePositionFront) {
+//                                                image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationLeftMirrored];
+//                                            }
+                                            
 //                                            UIImage *image = [UIImage imageWithCGImage:[[[UIImage alloc] initWithData:imageData] CGImage] scale:1.0f orientation:[self currentImageOrientation]];
                                             
                                             [self handleImage:image];
