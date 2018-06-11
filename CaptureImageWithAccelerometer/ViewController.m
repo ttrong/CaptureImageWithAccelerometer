@@ -374,60 +374,61 @@
  */
 - (void)handleImage:(UIImage *)image {
     /* Render the screen shot at custom resolution */
-    CGSize targetSize = CGSizeMake(720, 1280);//CGSizeMake(1280 ,720);
-    UIImage *sourceImage = image;
-    //Image redimenssionnée
-    UIImage *newImage = nil;
-    
-    //Taille de l'image de base
-    CGSize imageSize = sourceImage.size;
-    //Longueur et largeur
-    CGFloat width = imageSize.width;
-    CGFloat height = imageSize.height;
-    
-    //Dimension désirée
-    CGFloat targetWidth = targetSize.width;
-    CGFloat targetHeight = targetSize.height;
-    
-    //Echelle...
-    CGFloat scaleFactor = 0.0;
-    CGFloat scaledWidth = targetWidth;
-    CGFloat scaledHeight = targetHeight;
-    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
-    
-    //Si taille des image est différentes on redimensionne de facon proportionnelle
-    if (CGSizeEqualToSize(imageSize, targetSize) == NO) {
-        CGFloat widthFactor = targetWidth / width;
-        CGFloat heightFactor = targetHeight / height;
-        
-        if (widthFactor > heightFactor)
-            scaleFactor = widthFactor; // scale to fit height
-        else
-            scaleFactor = heightFactor; // scale to fit width
-        scaledWidth  = width * scaleFactor;
-        scaledHeight = height * scaleFactor;
-        
-        //Centre l'image
-        if (widthFactor > heightFactor)
-        {
-            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
-        }
-        else if (widthFactor < heightFactor)
-        {
-            thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
-        }
-    }
-    
-    UIGraphicsBeginImageContext(targetSize);
-    
-    CGRect thumbnailRect = CGRectZero;
-    thumbnailRect.origin = thumbnailPoint;
-    thumbnailRect.size.width  = scaledWidth;
-    thumbnailRect.size.height = scaledHeight;
-    
-    [sourceImage drawInRect:thumbnailRect];
-    
-    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    CGSize targetSize = CGSizeMake(720, 1280);//CGSizeMake(1280 ,720);//
+//    UIImage *sourceImage = image;
+//    //Image redimenssionnée
+//    UIImage *newImage = nil;
+//
+//    //Taille de l'image de base
+//    CGSize imageSize = sourceImage.size;
+//    //Longueur et largeur
+//    CGFloat width = imageSize.width;
+//    CGFloat height = imageSize.height;
+//
+//    //Dimension désirée
+//    CGFloat targetWidth = targetSize.width;
+//    CGFloat targetHeight = targetSize.height;
+//
+//    //Echelle...
+//    CGFloat scaleFactor = 0.0;
+//    CGFloat scaledWidth = targetWidth;
+//    CGFloat scaledHeight = targetHeight;
+//    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
+//
+//    //Si taille des image est différentes on redimensionne de facon proportionnelle
+//    if (CGSizeEqualToSize(imageSize, targetSize) == NO) {
+//        CGFloat widthFactor = targetWidth / width;
+//        CGFloat heightFactor = targetHeight / height;
+//
+//        if (widthFactor > heightFactor)
+//            scaleFactor = widthFactor; // scale to fit height
+//        else
+//            scaleFactor = heightFactor; // scale to fit width
+//        scaledWidth  = width * scaleFactor;
+//        scaledHeight = height * scaleFactor;
+//
+//        //Centre l'image
+//        if (widthFactor > heightFactor)
+//        {
+//            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
+//        }
+//        else if (widthFactor < heightFactor)
+//        {
+//            thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+//        }
+//    }
+//
+//    UIGraphicsBeginImageContext(targetSize);
+//
+//    CGRect thumbnailRect = CGRectZero;
+//    thumbnailRect.origin = thumbnailPoint;
+//    thumbnailRect.size.width  = scaledWidth;
+//    thumbnailRect.size.height = scaledHeight;
+//
+//    [sourceImage drawInRect:thumbnailRect];
+//
+//    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *newImage = [self resizedImageWithContentMode:UIViewContentModeScaleAspectFill imageToScale:image bounds:targetSize interpolationQuality:kCGInterpolationDefault];
     if(newImage == nil)
         NSLog(@"could not scale image");
     if (indexCapture == 1) {
@@ -447,6 +448,85 @@
         self.numberCapture.text = [NSString stringWithFormat:@"Chụp lần %d", indexCapture];
     }
 //    UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
+}
+
+- (UIImage *)resizedImageWithContentMode:(UIViewContentMode)contentMode imageToScale:(UIImage*)imageToScale bounds:(CGSize)bounds interpolationQuality:(CGInterpolationQuality)quality {
+    //Get the size we want to scale it to
+    CGFloat horizontalRatio = bounds.width / imageToScale.size.width;
+    CGFloat verticalRatio = bounds.height / imageToScale.size.height;
+    CGFloat ratio;
+    
+    switch (contentMode) {
+        case UIViewContentModeScaleAspectFill:
+            ratio = MAX(horizontalRatio, verticalRatio);
+            break;
+            
+        case UIViewContentModeScaleAspectFit:
+            ratio = MIN(horizontalRatio, verticalRatio);
+            break;
+            
+        default:
+            [NSException raise:NSInvalidArgumentException format:@"Unsupported content mode: %d", contentMode];
+    }
+    
+    //...and here it is
+    CGSize newSize = CGSizeMake(imageToScale.size.width * ratio, imageToScale.size.height * ratio);
+    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
+    //Si taille des image est différentes on redimensionne de facon proportionnelle
+    if (CGSizeEqualToSize(newSize, bounds) == NO) {
+        thumbnailPoint.x = (bounds.width - newSize.width) * 0.5;
+        thumbnailPoint.y = (bounds.height - newSize.height) * 0.5;
+//
+//        //Centre l'image
+//        if (widthFactor > heightFactor)
+//        {
+//            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
+//        }
+//        else if (widthFactor < heightFactor)
+//        {
+//            thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+//        }
+    }
+    
+    UIGraphicsBeginImageContext(bounds);
+    
+    CGRect thumbnailRect = CGRectZero;
+    thumbnailRect.origin = thumbnailPoint;
+    thumbnailRect.size.width  = newSize.width;
+    thumbnailRect.size.height = newSize.height;
+    
+    [imageToScale drawInRect:thumbnailRect];
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+//
+//
+//
+//
+//    //start scaling it
+//    CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height));
+//    CGImageRef imageRef = imageToScale.CGImage;
+//    CGContextRef bitmap = CGBitmapContextCreate(NULL,
+//                                                newRect.size.width,
+//                                                newRect.size.height,
+//                                                CGImageGetBitsPerComponent(imageRef),
+//                                                0,
+//                                                CGImageGetColorSpace(imageRef),
+//                                                CGImageGetBitmapInfo(imageRef));
+//
+//    CGContextSetInterpolationQuality(bitmap, quality);
+//
+//    // Draw into the context; this scales the image
+//    CGContextDrawImage(bitmap, newRect, imageRef);
+//
+//    // Get the resized image from the context and a UIImage
+//    CGImageRef newImageRef = CGBitmapContextCreateImage(bitmap);
+//    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+//
+//    // Clean up
+//    CGContextRelease(bitmap);
+//    CGImageRelease(newImageRef);
+    
+    return newImage;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
