@@ -47,7 +47,7 @@
                                             <constraint firstAttribute="trailing" secondItem="eOu-BF-zIG" secondAttribute="trailing" constant="10" id="wpr-cT-88G"/>
                                         </constraints>
                                     </view>
-                                    <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wIB-3l-pco">
+                                    <view alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wIB-3l-pco">
                                         <rect key="frame" x="0.0" y="544" width="375" height="103"/>
                                         <subviews>
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jvw-Wd-tRJ">
