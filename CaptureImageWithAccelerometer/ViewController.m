@@ -190,7 +190,7 @@
 - (NSBlockOperation *)captureOperation {
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
         self.session = [[AVCaptureSession alloc] init];
-        self.session.sessionPreset = AVCaptureSessionPresetPhoto;
+        self.session.sessionPreset = AVCaptureSessionPreset1280x720;
         AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
         NSError *error = nil;
         
@@ -374,7 +374,7 @@
  */
 - (void)handleImage:(UIImage *)image {
     /* Render the screen shot at custom resolution */
-    CGSize targetSize = CGSizeMake(720, 1280);//CGSizeMake(1280 ,720);//
+//    CGSize targetSize = CGSizeMake(720, 1280);//CGSizeMake(1280 ,720);//
 //    UIImage *sourceImage = image;
 //    //Image redimenssionnée
 //    UIImage *newImage = nil;
@@ -428,7 +428,8 @@
 //    [sourceImage drawInRect:thumbnailRect];
 //
 //    newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIImage *newImage = [self resizedImageWithContentMode:UIViewContentModeScaleAspectFill imageToScale:image bounds:targetSize interpolationQuality:kCGInterpolationDefault];
+//    UIImage *sourceImage = image;
+    UIImage *newImage = image;//[self resizedImageWithContentMode:UIViewContentModeScaleAspectFill imageToScale:image bounds:targetSize interpolationQuality:kCGInterpolationDefault];
     if(newImage == nil)
         NSLog(@"could not scale image");
     if (indexCapture == 1) {
