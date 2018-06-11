@@ -59,10 +59,10 @@
     self.blurView = [[UIVisualEffectView alloc] initWithEffect:effect];
     
     // Listen for orientation changes so that we can update the UI
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(orientationChanged:)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(orientationChanged:)
+//                                                 name:UIDeviceOrientationDidChangeNotification
+//                                               object:nil];
     
     
     self.numberCapture.text = [NSString stringWithFormat:@"Chụp lần %d", indexCapture];
@@ -181,6 +181,21 @@
     NSBlockOperation *operation = [self captureOperation];
     operation.completionBlock = ^{
         [self operationCompleted];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            AVCaptureDeviceInput *input = self.session.inputs.firstObject;
+            if (input.device.position != AVCaptureDevicePositionFront) {
+                NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+                for (AVCaptureDevice *device in devices) {
+                    if (device.position == AVCaptureDevicePositionFront) {
+                        [self.session removeInput:input];
+                        NSError *error = nil;
+                        input = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
+                        if (!input) return;
+                        [self.session addInput:input];
+                    }
+                }
+            }
+        });
     };
     operation.queuePriority = NSOperationQueuePriorityVeryHigh;
     [self.captureQueue addOperation:operation];
@@ -191,16 +206,8 @@
     NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
         self.session = [[AVCaptureSession alloc] init];
         self.session.sessionPreset = AVCaptureSessionPreset1280x720;
-//        AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
 
-        AVCaptureDevice *device = nil;
-        NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-        for(AVCaptureDevice *camera in devices) {
-            if([camera position] == AVCaptureDevicePositionFront) { // is front camera
-                device = camera;
-                break;
-            }
-        }
         NSError *error = nil;
         
         AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
@@ -439,6 +446,7 @@
 //    newImage = UIGraphicsGetImageFromCurrentImageContext();
 //    UIImage *sourceImage = image;
     UIImage *newImage = image;//[self resizedImageWithContentMode:UIViewContentModeScaleAspectFill imageToScale:image bounds:targetSize interpolationQuality:kCGInterpolationDefault];
+//    CGSize imageSize = newImage.size;
     if(newImage == nil)
         NSLog(@"could not scale image");
     if (indexCapture == 1) {
@@ -457,7 +465,7 @@
         [self performSegueWithIdentifier:@"showPreviewImage" sender:self];
         self.numberCapture.text = [NSString stringWithFormat:@"Chụp lần %d", indexCapture];
     }
-//    UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
+    UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
 }
 
 - (UIImage *)resizedImageWithContentMode:(UIViewContentMode)contentMode imageToScale:(UIImage*)imageToScale bounds:(CGSize)bounds interpolationQuality:(CGInterpolationQuality)quality {
