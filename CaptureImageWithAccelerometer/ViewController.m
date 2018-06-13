@@ -684,10 +684,11 @@
 }
 
 - (UIImage*)captureImageShare:(UIImage *)image {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 720, 1280)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 720, 960)];
     //    view.backgroundColor = [UIColor colorWithPatternImage:image];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:view.bounds];
     imageView.image = image;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
     [view addSubview:imageView];
     
     CGRect rect = [view bounds];
