@@ -376,10 +376,10 @@
                                             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
                                             
                                             UIImage *image = [[UIImage alloc]initWithData:imageData scale:1];
-//                                            AVCaptureDeviceInput *input = self.session.inputs.firstObject;
-//                                            if (input.device.position == AVCaptureDevicePositionFront) {
-//                                                image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationLeftMirrored];
-//                                            }
+                                            AVCaptureDeviceInput *input = self.session.inputs.firstObject;
+                                            if (input.device.position == AVCaptureDevicePositionFront) {
+                                                image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationLeftMirrored];
+                                            }
                                             
 //                                            UIImage *image = [UIImage imageWithCGImage:[[[UIImage alloc] initWithData:imageData] CGImage] scale:1.0f orientation:[self currentImageOrientation]];
                                             
@@ -456,9 +456,9 @@
     if(newImage == nil)
         NSLog(@"could not scale image");
     if (indexCapture == 1) {
-        _fImageCapture = newImage;
+        _fImageCapture = [self captureImageShare:newImage];
     } else {
-        _sImageCapture = newImage;
+        _sImageCapture = [self captureImageShare:newImage];
     }
     
 //    UIGraphicsEndImageContext();
@@ -471,7 +471,7 @@
         [self performSegueWithIdentifier:@"showPreviewImage" sender:self];
         self.numberCapture.text = [NSString stringWithFormat:@"Chụp lần %d", indexCapture];
     }
-    UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
+//    UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
 }
 
 - (UIImage *)resizedImageWithContentMode:(UIViewContentMode)contentMode imageToScale:(UIImage*)imageToScale bounds:(CGSize)bounds interpolationQuality:(CGInterpolationQuality)quality {
@@ -683,6 +683,22 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (UIImage*)captureImageShare:(UIImage *)image {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 720, 1280)];
+    //    view.backgroundColor = [UIColor colorWithPatternImage:image];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:view.bounds];
+    imageView.image = image;
+    [view addSubview:imageView];
+    
+    CGRect rect = [view bounds];
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 1.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    [view.layer renderInContext:context];
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return img;
+}
 
 //#pragma mark -
 //#pragma mark UIImagePickerControllerDelegate

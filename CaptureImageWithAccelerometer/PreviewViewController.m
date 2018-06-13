@@ -62,8 +62,8 @@
     NSString* deviceModel = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
     NSString *version = [[UIDevice currentDevice] systemVersion];
     
-    NSData *fimageData = UIImageJPEGRepresentation(self.imageCapture, 1.0);
-    NSData *simageData = UIImageJPEGRepresentation(self.sImageCapture, 1.0);
+    NSData *fimageData = UIImageJPEGRepresentation(self.imageCapture, 0.5);
+    NSData *simageData = UIImageJPEGRepresentation(self.sImageCapture, 0.5);
 //    NSMutableData *fileAngleData = [NSMutableData dataWithCapacity:0];
 //    [fileAngleData appendBytes:&_angleDevice length:sizeof(float)];
 //    NSMutableData *sfileAngleData = [NSMutableData dataWithCapacity:0];
@@ -82,10 +82,6 @@
     [[AFAppDotNetAPIClient sharedClient] POST:partLink parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         [formData appendPartWithFileData:fimageData name:@"fimage" fileName:@"fimage.jpg" mimeType:@"image/jpeg"];
         [formData appendPartWithFileData:simageData name:@"simage" fileName:@"simage.jpg" mimeType:@"image/jpeg"];
-//        [formData appendPartWithFormData:fileAngleData name:@"fileAngle"];
-//        [formData appendPartWithFormData:sfileAngleData name:@"sfileAngle"];
-//        [formData appendPartWithFormData:deviceData name:@"deviceName"];
-//        [formData appendPartWithFormData:versionData name:@"osVersion"];
     } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         int success = [[responseObject objectForKey:@"errorCode"] boolValue];
         if (success == 1) {
