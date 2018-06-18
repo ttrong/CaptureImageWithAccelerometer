@@ -222,9 +222,12 @@
                 device.focusPointOfInterest = CGPointMake(0.5,0.5);
                 device.focusMode = AVCaptureFocusModeContinuousAutoFocus;
             }
-            
-            if ([device isFlashModeSupported:AVCaptureFlashModeAuto]) {
-                device.flashMode = AVCaptureFlashModeAuto;
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+                if ([device isFlashModeSupported:AVCaptureFlashModeAuto]) {
+                    device.flashMode = AVCaptureFlashModeAuto;
+                } else {
+                    device.flashMode = AVCaptureFlashModeOff;
+                }
             } else {
                 device.flashMode = AVCaptureFlashModeOff;
             }
@@ -684,7 +687,7 @@
 }
 
 - (UIImage*)captureImageShare:(UIImage *)image {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 720, 960)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 720, 1280)];
     //    view.backgroundColor = [UIColor colorWithPatternImage:image];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:view.bounds];
     imageView.image = image;

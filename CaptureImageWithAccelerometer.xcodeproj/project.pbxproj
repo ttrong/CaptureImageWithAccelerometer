@@ -701,7 +701,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "f2a06390-1bf0-466a-9bc1-e5ebc52d6563";
 				PROVISIONING_PROFILE_SPECIFIER = "Developer iOS: Vinabook reader";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -721,7 +721,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "f2a06390-1bf0-466a-9bc1-e5ebc52d6563";
 				PROVISIONING_PROFILE_SPECIFIER = "Developer iOS: Vinabook reader";
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
