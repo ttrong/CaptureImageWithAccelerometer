@@ -228,10 +228,9 @@
                 } else {
                     device.flashMode = AVCaptureFlashModeOff;
                 }
-            } else {
-                device.flashMode = AVCaptureFlashModeOff;
+                self.flashMode = device.flashMode;
             }
-            self.flashMode = device.flashMode;
+            
         }
         [device unlockForConfiguration];
         
@@ -286,7 +285,9 @@
     NSError *error = nil;
     BOOL success = [device lockForConfiguration:&error];
     if (success) {
-        device.flashMode = self.flashMode;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+            device.flashMode = self.flashMode;
+        }
     }
     [device unlockForConfiguration];
 }
