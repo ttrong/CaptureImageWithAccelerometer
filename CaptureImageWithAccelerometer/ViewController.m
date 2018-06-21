@@ -379,13 +379,13 @@
                                             if (!imageDataSampleBuffer || error) return;
                                             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
                                             
-                                            UIImage *image = [[UIImage alloc]initWithData:imageData scale:1];
-                                            AVCaptureDeviceInput *input = self.session.inputs.firstObject;
-                                            if (input.device.position == AVCaptureDevicePositionFront) {
-                                                image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationLeftMirrored];
-                                            }
+//                                            UIImage *image = [[UIImage alloc]initWithData:imageData scale:1];
+//                                            AVCaptureDeviceInput *input = self.session.inputs.firstObject;
+//                                            if (input.device.position == AVCaptureDevicePositionFront) {
+//                                                image = [UIImage imageWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationLeftMirrored];
+//                                            }
                                             
-//                                            UIImage *image = [UIImage imageWithCGImage:[[[UIImage alloc] initWithData:imageData] CGImage] scale:1.0f orientation:[self currentImageOrientation]];
+                                            UIImage *image = [UIImage imageWithCGImage:[[[UIImage alloc] initWithData:imageData] CGImage] scale:1.0f orientation:[self currentImageOrientation]];
                                             
                                             [self handleImage:image];
                                         }];
@@ -688,11 +688,11 @@
 }
 
 - (UIImage*)captureImageShare:(UIImage *)image {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 720, 1280)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
     //    view.backgroundColor = [UIColor colorWithPatternImage:image];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:view.bounds];
     imageView.image = image;
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
+//    imageView.contentMode = UIViewContentModeScaleAspectFill;
     [view addSubview:imageView];
     
     CGRect rect = [view bounds];
