@@ -21,6 +21,8 @@
 @property (assign, nonatomic) float angleDevice;
 @property (assign, nonatomic) float sAngleDevice;
 
-@property (nonatomic, strong) RBVolumeButtons *buttonStealer;
+//@property (nonatomic, strong) RBVolumeButtons *buttonStealer;
+
+- (IBAction)saveButtonPress:(id)sender;
 
 @end

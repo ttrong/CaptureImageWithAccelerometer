@@ -9,7 +9,6 @@
 #import "ViewController.h"
 #import "JPSCameraButton.h"
 #import <AVFoundation/AVFoundation.h>
-#import "PreviewViewController.h"
 
 @interface ViewController ()
 
@@ -89,11 +88,24 @@
     
     self.buttonStealer = [[RBVolumeButtons alloc] init];
     self.buttonStealer.upBlock = ^{
-        [weakSelf takePicture];
+        if (weakSelf.isShowDetail) {
+            if (weakSelf.destViewController) {
+                [weakSelf.destViewController saveButtonPress:nil];
+            }
+        } else {
+            [weakSelf takePicture];
+        }
     };
     self.buttonStealer.downBlock = ^{
-        [weakSelf takePicture];
+        if (weakSelf.isShowDetail) {
+            if (weakSelf.destViewController) {
+                [weakSelf.destViewController saveButtonPress:nil];
+            }
+        } else {
+            [weakSelf takePicture];
+        }
     };
+    [self.buttonStealer startStealingVolumeButtonEvents];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -103,7 +115,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.buttonStealer startStealingVolumeButtonEvents];
+    _isShowDetail = NO;
+//    [self.buttonStealer startStealingVolumeButtonEvents];
     [self enableCapture];
 //    if (_motionManager) {
 //        [_motionManager startDeviceMotionUpdates];
@@ -112,7 +125,8 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.buttonStealer stopStealingVolumeButtonEvents];
+    _isShowDetail = YES;
+//    [self.buttonStealer stopStealingVolumeButtonEvents];
 //    if (_motionManager) {
 //        [_motionManager stopDeviceMotionUpdates];
 //    }
@@ -558,12 +572,13 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    _destViewController = nil;
     if ([segue.identifier isEqualToString:@"showPreviewImage"]) {
-        PreviewViewController *destViewController = segue.destinationViewController;
-        destViewController.imageCapture = _fImageCapture;//[recipes objectAtIndex:indexPath.row];
-        destViewController.angleDevice = _fAngleDevice;
-        destViewController.sImageCapture = _sImageCapture;
-        destViewController.sAngleDevice = _sAngleDevice;
+        _destViewController = segue.destinationViewController;
+        _destViewController.imageCapture = _fImageCapture;//[recipes objectAtIndex:indexPath.row];
+        _destViewController.angleDevice = _fAngleDevice;
+        _destViewController.sImageCapture = _sImageCapture;
+        _destViewController.sAngleDevice = _sAngleDevice;
     }
 }
 

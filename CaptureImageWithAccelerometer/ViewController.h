@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreMotion/CMMotionManager.h>
 #import "RBVolumeButtons.h"
+#import "PreviewViewController.h"
 
 @interface ViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
     float device_angle;
@@ -17,7 +18,9 @@
 }
 
 @property (nonatomic, strong) RBVolumeButtons *buttonStealer;
-@property (nonatomic, strong)CMMotionManager *motionManager;
+@property (nonatomic, strong) CMMotionManager *motionManager;
+@property (nonatomic, weak) PreviewViewController *destViewController;
+@property (nonatomic, assign) BOOL isShowDetail;
 
 @end
 
