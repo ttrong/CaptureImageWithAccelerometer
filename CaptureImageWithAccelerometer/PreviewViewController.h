@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MBProgressHUD.h"
+#import "RBVolumeButtons.h"
 
 @interface PreviewViewController : UIViewController {
     
@@ -19,5 +20,7 @@
 
 @property (assign, nonatomic) float angleDevice;
 @property (assign, nonatomic) float sAngleDevice;
+
+@property (nonatomic, strong) RBVolumeButtons *buttonStealer;
 
 @end

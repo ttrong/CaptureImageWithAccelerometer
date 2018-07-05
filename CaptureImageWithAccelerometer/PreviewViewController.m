@@ -28,11 +28,30 @@
     _imagePreview.image = _imageCapture;
     _angleLable.text = [NSString stringWithFormat:@"Image capture at: %.2f", _angleDevice];
     
+    __weak typeof(self) weakSelf = self;
+    self.buttonStealer = [[RBVolumeButtons alloc] init];
+    self.buttonStealer.upBlock = ^{
+        [weakSelf saveButtonPress:nil];
+    };
+    self.buttonStealer.downBlock = ^{
+        [weakSelf saveButtonPress:nil];
+    };
+    
     _loadingView = [[MBProgressHUD alloc] initWithView:self.view];
     _loadingView.animationType = MBProgressHUDAnimationZoom;
     _loadingView.labelText = @"Loading...";
     [self.view addSubview:_loadingView];
     [_loadingView hide:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.buttonStealer startStealingVolumeButtonEvents];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.buttonStealer stopStealingVolumeButtonEvents];
 }
 
 - (void)didReceiveMemoryWarning {
